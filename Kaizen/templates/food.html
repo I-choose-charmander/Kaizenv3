@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %} Meal Intake {% endblock %}
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet"> 
+<style> 
+  .text { 
+    color: green; 
+    font-weight: bold; 
+    font-family: 'Times New Roman', Times, serif; 
+  } 
+  .ok { 
+    color: white; 
+    text-decoration: none; 
+  } 
+  .ok:hover { 
+    color: white; 
+    text-decoration: none; 
+  } 
+</style> 
+
+{% block content %}
+<div class="container mt-5"> 
+    <form class="mx-auto card p-3 shadow-lg" method="post" enctype="multipart/form-data" style="max-width: 225px;"> 
+        {% csrf_token %} 
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Add Meal</button>
+    </form>
+    <div class="class mt-5"> 
+      <!-- <form action="{% url 'pdf' %}"> 
+        <button class="btn btn-primary"> <a class="ok" href="#"> Print </a></button> 
+      </form>--> 
+
+      <table class="table mt-6"> 
+          <thead> 
+              <tr> 
+                  <th scope="col">Meal #</th> 
+                  <th scope="col">Calories</th> 
+                  <th scope="col">Protein</th> 
+                  <th scope="col">Carbohydrates</th>
+                  <th scope="col">Fats</th>
+                  <th scope="col">Actions</th> 
+              </tr> 
+          </thead> 
+          <tbody> 
+              {% for item in query %} 
+              <tr> 
+                  <th scope="row">{{ forloop.counter }}</th> 
+                  <td>{{ item.tdee_intake }}</td> 
+                  <td>{{ item.protein_intake }}</td> 
+                  <td>{{ item.carb_intake }}</td>
+                  <td>{{ item.fat_intake }}</td>
+
+                  <td> 
+                      <a href="/delete_meal/{{ item.id }}" class="btn btn-danger m-2">Delete </a> 
+                      <a href="/update_meal/{{ item.id }}" class="btn btn-success">Update </a> 
+                  </td> 
+              </tr> 
+              {% endfor %} 
+          </tbody> 
+      </table> 
+  </div> 
+</div>
+{% endblock %}

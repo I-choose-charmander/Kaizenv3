@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>
+    <h3 style="text-align: center;">
+    {{user.username}} your total intake for {{data.date}}
+    </h3>
+</div>
+<div class="container mt-5">
+    <table class="table mt-6"> 
+        <thead> 
+            <tr style="pointer-events: none;"> 
+                <th scope="col"></th> 
+                <th scope="col">Calories</th> 
+                <th scope="col">Protein</th> 
+                <th scope="col">Carbohydrates</th>
+                <th scope="col">Fats</th>
+        
+            </tr> 
+        </thead> 
+        <tbody> 
+            <tr style="background: lightblue;"> 
+                <th scope="row">Set Macros</th>  
+                <td>{{ query.tdee }}</td> 
+                <td>{{ query.protein }}</td> 
+                <td>{{ query.carb }}</td>
+                <td>{{ query.fat }}</td> 
+            </tr>
+            <tr style="background: rgb(196, 195, 195);">
+                <th scope="row">Remaining Macros</th> 
+                <td>{{daily.total_tdee_intake}}</td>
+                <td>{{daily.total_tdee_intake}}</td>
+                <td>{{daily.total_tdee_intake}}</td>
+                <td>{{daily.total_tdee_intake}}</td>  
+            </tr> 
+            <tr style="pointer-events: none;">
+                <th scope="row">Todays Macros Remaining</th> 
+                <td style="background: rgb(253, 239, 52);">{{data.tdee}}</td>
+                <td style="background: rgb(253, 239, 52);">{{data.protein}}</td>
+                <td style="background: rgb(253, 239, 52);">{{data.carb}}</td>
+                <td style="background: rgb(253, 239, 52);">{{data.fat}}</td>  
+            </tr> 
+        </tbody> 
+    </table> 
+</br>
+<form action="{% url 'food' %}" method="get" style="text-align: center;">
+    <button type="submit" class="btn btn-success">View Meals</button>
+</form>
+</div>
+    
+    
+{% endblock %} 

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% load static %}
+
+{% block content %}
+<style>
+    .name{
+        font-size: 50px;
+    }
+    .about{
+        text-align: center;
+        font-family:'Times New Roman', Times, serif
+    }
+    .faii img{
+        width: 60%;
+        height: 60%;
+        object-fit: cover;
+    }
+</style>
+{% if user.is_authenticated %}
+
+<body class="about">
+    <h1 class="name"> Hi {{user.username}}! </h1>
+
+    <p>Welcome to Project Kaizen. </p>
+    <p>Please enjoy the modules Faii has prepared for you to improve for your daily life. </p>
+    <div class="faii">
+        <img src="{% static 'Faii.jpg' %}" alt="Faii">
+    </div>
+</body>
+{% else %}
+<body class="about">
+    <h1 class="name">Welcome</h1>
+    <p>This is the home page of Project Kaizen</p>
+    <p>To use the models made by Faii, please log in or sign up!</p>
+    <div class="faii">
+        <img src="{% static 'Faii.jpg' %}" alt="Faii">
+    </div>
+</body>
+{% endif %}
+
+
+{% endblock %}

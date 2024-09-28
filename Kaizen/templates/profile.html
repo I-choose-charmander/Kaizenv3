@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>
+    {% if user.is_authenticated %}
+    <h1>Profile information: {{ user.username }} </h1>
+    <br/>
+    <h2>
+        <p>Bio: {{user_data.bio}} </p><br/>
+        <p>Location: {{user_data.location}} </p><br/>
+        <p>Birth Day: {{user_data.birth_date}}</p><br/>
+    </h2>
+    <button id="toggleButton">Update Profile</button>
+        <div id="hiddenContent" class="hidden" style="display: none;">
+            <a href="{% url 'update_profile' %}">Profile Update</a>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('toggleButton').addEventListener('click', function() {
+                    var content = document.getElementById('hiddenContent');
+                    if (content.style.display === 'none') {
+                        content.style.display = 'block';
+                    } else {
+                        content.style.display = 'none';
+                    }
+                });
+            });
+        </script>
+    {% endif %}
+</div>
+{% endblock %}

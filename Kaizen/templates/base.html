@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{page}}</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <style>
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: flex-end; /* Aligns the items to the right */
+            background-color: #333;
+            padding: 10px 20px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li {
+            margin-left: 20px;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 10px;
+        }
+        .ft-tag{
+            font-size: 100%;
+            font-family:cursive;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    {% if user.is_authenticated %}
+    <nav class='navbar'>
+        <ul class='nav-links'>
+            <li>
+                <a href="{% url 'macro' %}">Macro Calculation</a>
+            </li>
+            <li>
+                <a href="{% url 'food' %}">Meal Intake</a>
+            </li>
+            <li>
+                <a href="{% url 'daily_totals' %}">Current meals</a>
+            </li>
+            <li>
+                <a href="{% url 'profile' %}">My Profile</a>
+            </li>
+            <li>
+                <a href="{% url 'home' %}">Home</a>
+            </li>
+            <li>
+                <a href="{% url 'logout' %}">Log Out</a>
+            </li>
+        </ul>
+    </nav>
+    {% else %}
+    <nav class='navbar'>
+        <ul class='nav-links'>
+            <li>
+                <a href="{% url 'login' %}">Log in</a>
+            </li>
+            <li>
+                <a href="{% url 'register' %}">Sign up</a>
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+<footer>
+    <div>
+        <br/>
+        <h3 class="ft-tag"> Beta site production stage </h3>
+    </div>
+</footer>
+</html>

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="macro-results">
+        <div class="mt-5">
+            <p class="text">Your TDEE (calories) is {{ user_bmr_data.tdee }}</p> 
+            <p class="text">Protein: {{ user_bmr_data.protein }}</p>
+            <p class="text">Fat: {{ user_bmr_data.fat }}</p>
+            <p class="text">Carbohydrates: {{ user_bmr_data.carb }}</p>
+        </div>
+</div>
+<div class="return-to-page">
+    <a href = " {% url 'macro' %}">Macro Nutrients Calculator</a>
+    <a href = " {% url 'profile' %}">My Profile</a>
+</div>
+{% endblock %}

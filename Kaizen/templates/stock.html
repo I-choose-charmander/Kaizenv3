@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %} Stock Visualizer {% endblock %}
+
+{% block content %}
+<body>
+
+    <form class="stock" method="POST">
+        {% csrf_token %} 
+        {{form.as_p}}
+        <button type="submit">Pull Data</button>
+    </form>
+    {% if form.is_valid %}
+    {{ data }}
+    {% endif %}
+</body>
+
+{% endblock %}

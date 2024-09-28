@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %} Macro-nutrients {% endblock %}
+
+{% block content %}
+</br>
+<p><a href="{% url 'home' %}">Home</a></p>
+</br>
+{% if user.is_authenticated %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Calculate</button>
+    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var choiceField = document.getElementById("id_goal");
+            var integerField = document.getElementById('id_extra').parentElement;
+        
+            function toggleIntegerField() {
+                if (choiceField.value === 'Monthly Breakdown') {
+                    integerField.style.display = 'none';
+                } else {
+                    integerField.style.display = 'block';
+                }
+            }
+        
+            choiceField.addEventListener('change', toggleIntegerField);
+            toggleIntegerField();  // Initial call to set the correct state
+        });
+    </script>
+    {% if results %}
+        <p>Page is live</p>
+        {{ results }}
+    {% else %}
+        <p>Form has errors:</p>
+        {{ form.errors }}
+    {% endif %}
+{% else %}
+<p>You are not logged in</p>
+<p><a href="{% url 'password_reset' %}">Password Reset</a></p>
+<p><a href="{% url 'login' %}">Login</a></p>
+{% endif %}
+
+{% endblock %}

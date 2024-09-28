@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>
+    <h1 style='font-size:50px;'>Data provided from  Nuritionix API</h1>
+
+    <p class='food_name'style='font-size:30px;font-weight:bold;'>Food: {{data.Food}}</p>
+    <p style='color:red;font-size:20px;font-weight:bold;'>Average serving size: {{data.Serving_size}}</p>
+    <p style='color:red;font-size:20px;font-weight:bold;'>Serving size: {{data.Grams}} g</p>
+    <p style='color:red;font-size:20px;font-weight:bold;'>Calories: {{data.Calories}} g</p>
+    <p style='color:red;font-size:20px;font-weight:bold;'>Protien: {{data.Protien}} g</p>
+    <p style='color:red;font-size:20px;font-weight:bold;'>Carbohydrates: {{data.Carbohydrates}} g</p>
+    <p style='color:red;font-size:20px;font-weight:bold;'>Fats: {{data.Fats}} g</p></br>
+ 
+    <h3> These estimates are based on the most common connection to the </br>
+     to the search query. The more specific a food, the closer the accuracy.</br>
+    </h3>
+</div>
+<a href="{% url 'food' %}">Return</a>
+{% endblock %}

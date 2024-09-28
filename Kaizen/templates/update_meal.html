@@ -1,0 +1,12 @@
+{% extends "base.html" %} 
+{% block content %} 
+<div class="container mt-5 col-5"> 
+  <form class="col-6 mx-auto card p-3 shadow-lg" method="post" enctype="multipart/form-data"> 
+    {% csrf_token %} 
+    {{form}}
+  </br>
+    <button type="submit" class="btn btn-danger">Update </button> 
+  </form> 
+</div> 
+  
+{% endblock %} 
