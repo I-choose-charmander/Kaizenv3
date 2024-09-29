@@ -57,9 +57,13 @@
             font-size: 10px;
         }
         .ft-tag{
-            font-size: 100%;
+            font-size: 70%;
             font-family:cursive;
-            text-align: left;
+        }
+        .foot{
+            width: auto;
+            height: fit-content;
+            align-content: center;
         }
     </style>
 </head>
@@ -68,10 +72,10 @@
     <nav class='navbar'>
         <ul class='nav-links'>
             <li>
-                <a href="{% url 'macro' %}">Macro Calculation</a>
+                <a href="{% url 'macro' %}">Calculate MacroNutrients</a>
             </li>
             <li>
-                <a href="{% url 'food' %}">Meal Intake</a>
+                <a href="{% url 'food' %}">Meals</a>
             </li>
             <li>
                 <a href="{% url 'daily_totals' %}">Current meals</a>
@@ -106,8 +110,7 @@
     </main>
 </body>
 <footer>
-    <div>
-        <br/>
+    <div class="foot">
         <h3 class="ft-tag"> Beta site production stage </h3>
     </div>
 </footer>

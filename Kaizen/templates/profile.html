@@ -1,17 +1,44 @@
 {% extends 'base.html' %}
 {% block content %}
+<style>
+    .info {
+        text-align: justify
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: bold;
+    }
+    .profiledata{
+        text-align: center;
+        width: fit-content;
+        height: fit-content;
+    }
+    .user{
+        text-align: center;
+    }
+</style>
+
 <div>
     {% if user.is_authenticated %}
-    <h1>Profile information: {{ user.username }} </h1>
-    <br/>
-    <h2>
-        <p>Bio: {{user_data.bio}} </p><br/>
-        <p>Location: {{user_data.location}} </p><br/>
-        <p>Birth Day: {{user_data.birth_date}}</p><br/>
-    </h2>
+    <h1 class="user">Profile information: {{ user.username }} </h1>
+        <br/>
+    <div class="info" >
+        <p1 > Bio:</p1></br>
+        <div class="profiledata">{{user_data.bio}}</div> 
+        
+        <p2>Location: </p2></br>
+        <div class="profiledata">
+            {{user_data.location}} 
+        </div>
+        <p3> Birth Day: </p3></br>
+        <div class="profiledata">
+            {{user_data.birth_date}}
+        </div>
+    </div></br>
     <button id="toggleButton">Update Profile</button>
         <div id="hiddenContent" class="hidden" style="display: none;">
-            <a href="{% url 'update_profile' %}">Profile Update</a>
+            <p style="text-align: center;"> Warning: this will modify your profile data</p>
+            <form action="{% url 'update_profile' %}" method="get" style="text-align: center;">
+                <button type="submit" class="btn btn-danger">Update</button>
+            </form>
         </div>
         <script>
             document.addEventListener('DOMContentLoaded', function() {

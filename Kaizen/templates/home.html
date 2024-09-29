@@ -4,40 +4,70 @@
 
 {% block content %}
 <style>
-    .name{
+    .name {
         font-size: 50px;
     }
-    .about{
+    .about {
         text-align: center;
-        font-family:'Times New Roman', Times, serif
+        font-family: 'Times New Roman', Times, serif;
     }
-    .faii img{
-        width: 60%;
-        height: 60%;
+    .aboutme {
+            background-color: #fff;
+            border-radius: 100px;
+            box-shadow: 0 100px 100px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            margin: 10px;
+            max-width: 600px;
+            margin: auto;
+        }
+    .faii {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .faii img {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
         object-fit: cover;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .faii:hover {
+        background: lightblue;
+    }
+    
+    @media (max-width: 768px) {
+        .name {
+            font-size: 30px;
+        }
+        .faii {
+            height: auto;
+        }
     }
 </style>
 {% if user.is_authenticated %}
-
 <body class="about">
-    <h1 class="name"> Hi {{user.username}}! </h1>
-
-    <p>Welcome to Project Kaizen. </p>
-    <p>Please enjoy the modules Faii has prepared for you to improve for your daily life. </p>
+    <div class="aboutme">
+        <h1 class="name"> Hi {{ user.username }}! </h1>
+        <p>Welcome to Project Kaizen.</p>
+        <p>Please enjoy the modules Faii has prepared for you to improve your daily life.</p>
+    </div>
     <div class="faii">
         <img src="{% static 'Faii.jpg' %}" alt="Faii">
     </div>
 </body>
 {% else %}
 <body class="about">
-    <h1 class="name">Welcome</h1>
-    <p>This is the home page of Project Kaizen</p>
-    <p>To use the models made by Faii, please log in or sign up!</p>
+    <div class="aboutme">
+        <h1 class="name">Welcome</h1>
+        <p>This is the home page of Project Kaizen</p>
+        <p>To use the models made by Faii, please log in or sign up!</p>
+    </div>
     <div class="faii">
         <img src="{% static 'Faii.jpg' %}" alt="Faii">
     </div>
 </body>
 {% endif %}
-
-
 {% endblock %}

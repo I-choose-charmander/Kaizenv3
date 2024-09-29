@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from dotenv import load_dotenv
-from .models import Expense,StockData,Profile,BMR,RunningMacro,DailyTotals
+from .models import Expense,StockData,Profile,BMR,RunningMacro,DailyTotal
 from .forms import BMRForm,BudgetForm,ExpenseForm,StockForm,ProfileForm,FoodForm,MacroIntakeForm
 from .macrocalc import calculate_bmr,calculate_tdee, calculate_macros
 from .budgetcalc import monthly_budget
@@ -109,7 +109,7 @@ def food_intake(request):
         total_f = sum(rm.fat_intake for rm in queryset)
         total_tdee = sum(rm.tdee_intake for rm in queryset)
     
-    daily,create  = DailyTotals.objects.get_or_create(user=request.user,date=date.today())
+    daily,create  = DailyTotal.objects.get_or_create(user=request.user,date=date.today())
     daily.total_protein_intake = total_p
     daily.total_carb_intake = total_c
     daily.total_fat_intake = total_f
@@ -157,7 +157,7 @@ def update_meal(request, id):
 @login_required(login_url='/login/')   
 def daily_totals_view(request):
     # Get or create the DailyTotals for the current date
-    daily,created = DailyTotals.objects.get_or_create(user=request.user, date=date.today())
+    daily,created = DailyTotal.objects.get_or_create(user=request.user, date=date.today())
     
     # If created, it means it's a new day and totals are already set to zero by default
     if created:

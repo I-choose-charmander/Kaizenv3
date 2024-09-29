@@ -50,7 +50,7 @@ class RunningMacro(models.Model):
     fat_intake = models.FloatField(null=True, blank=True)
     
         
-class DailyTotals(models.Model):
+class DailyTotal(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)
     total_protein_intake = models.FloatField(default=0)
