@@ -31,16 +31,17 @@ class MacroIntakeForm(forms.ModelForm):
     class Meta:
         model = RunningMacro
         fields = (
+            'tdee_intake',
             'protein_intake',
             'carb_intake',
-            'fat_intake',
-            'tdee_intake'
+            'fat_intake'
                 )
         widget = {
+            'tdee_intake': forms.NumberInput(attrs={'class': 'form-control'}),
             'protein_intake': forms.NumberInput(attrs={'class': 'form-control'}),
             'carb_intake': forms.NumberInput(attrs={'class': 'form-control'}),
             'fat_intake': forms.NumberInput(attrs={'class': 'form-control'}),
-            'tdee_intake': forms.NumberInput(attrs={'class': 'form-control'}),
+            
         }
 class BudgetForm(forms.Form):
     GOAL_CHOICES = [("Monthly Breakdown", "Monthly Breakdown"), ("Emergency Fund", "Emergency Fund"), ("Purchase", "Purchase"),("Build", 'Save/Invest') ]
@@ -85,3 +86,8 @@ class ProfileForm(forms.ModelForm):
 
 class FoodForm(forms.Form):
     query = forms.CharField()
+
+class CreateUserForm(forms.Form):
+    pass
+
+

@@ -44,10 +44,11 @@ class Profile(models.Model):
 class RunningMacro(models.Model):
     user = models.ForeignKey(User,on_delete=models.SET_NULL, null=True,blank=True)
     date = models.DateField(auto_now_add=True)
+    tdee_intake = models.FloatField(null=True, blank=True)
     protein_intake = models.FloatField(null=True,blank=True)
     carb_intake = models.FloatField(null=True,blank=True)
     fat_intake = models.FloatField(null=True, blank=True)
-    tdee_intake = models.FloatField(null=True, blank=True)
+    
         
 class DailyTotals(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
