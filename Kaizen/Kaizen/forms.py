@@ -1,5 +1,5 @@
 from django import forms
-from .models import Expense, BMR, StockData, Profile, RunningMacro
+from .models import Expense, BMR, StockData, Profile, RunningMacro, Food
 
 class BMRForm(forms.ModelForm):
     #save_to_profile = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
@@ -84,8 +84,15 @@ class ProfileForm(forms.ModelForm):
             'birth_date'
         ]
 
-class FoodForm(forms.Form):
-    query = forms.CharField()
+class FoodForm(forms.ModelForm):
+    class Meta:
+        model = Food
+        fields = [
+            'food'
+        ]
+        widget = {
+            'food' : forms.CharField()
+        }
 
 class CreateUserForm(forms.Form):
     pass

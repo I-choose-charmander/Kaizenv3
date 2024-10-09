@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from dotenv import load_dotenv
-from .models import Expense,StockData,Profile,BMR,RunningMacro,DailyTotal
+from .models import Expense,StockData,Profile,BMR,RunningMacro,DailyTotal,Food
 from .forms import BMRForm,BudgetForm,ExpenseForm,StockForm,ProfileForm,FoodForm,MacroIntakeForm
 from .macrocalc import calculate_bmr,calculate_tdee, calculate_macros
 from .budgetcalc import monthly_budget
@@ -318,40 +318,68 @@ def macro_results(request):
     return render(request, 'macro_results.html', {'user_bmr_data': user_bmr_data})
 
 def get_api_data(request):
-    query = request.POST.get('query')
-    api_key = os.getenv('API_KEY_NIX')
-    app_id = os.getenv('APP_ID_NIX')
-    url = 'https://trackapi.nutritionix.com/v2/natural/nutrients'
-    headers={
-            'Content-Type': 'application/json',
-            'x-app-id': app_id,
-            'x-app-key': api_key,
-                }
-    search = {
-         'query' : query 
-    }
+    error = None
+    food = None
 
-    response = requests.post(url,headers=headers,data=json.dumps(search))
-    if response.status_code == 200:
-        data2 = response.json()
-        for item in data2['foods']:
-             #data.append(item)
-             
-             serving = item['serving_unit']
-             grams = item['serving_weight_grams']
-             calories_of_food = item['nf_calories']
-             fats = item['nf_total_fat']
-             carbo = item['nf_total_carbohydrate']
-             protien = item['nf_protein']
+    if request.method == 'POST':
+        form = FoodForm(request.POST)
+        if form.is_valid():
+            food_name = form.cleaned_data['food']
+            try:
+                food = Food.objects.get(food=food_name)
+            except Food.DoesNotExist:
+                food = Food(food=food_name)
 
-             data = {'Food': query, 'Serving_size': serving, 'Grams':grams,
-                     'Calories': calories_of_food, 'Protien':protien, "Carbohydrates":carbo, 'Fats':fats}
+            data = {
+                'Serving_size': '',
+                'Grams': '',
+                'Calories': '',
+                'Protein': '',
+                'Carbohydrates': '',
+                'Fats': ''
+            }
+            api_key = os.getenv('API_KEY_NIX')
+            app_id = os.getenv('APP_ID_NIX')
+            url = 'https://trackapi.nutritionix.com/v2/natural/nutrients'
+            headers = {
+                'Content-Type': 'application/json',
+                'x-app-id': '8ff4bf0f',
+                'x-app-key': '14f67c693f4160f004a75b6d2fc26abe',
+            }
+            search = {
+                'query': food_name
+            }
 
-             
-        return render(request, 'food_api.html', {'data': data})
-    error= f'Request failed with status code {response.status_code}'
-    form = FoodForm()
-    return render(request, 'food.html', {'error': error,'form':form})
+            response = requests.post(url, headers=headers, data=json.dumps(search), timeout=100)
+            
+            if response.status_code == 200:
+                data2 = response.json()
+                for item in data2['foods']:
+                    serving = item['serving_unit']
+                    grams = item['serving_weight_grams']
+                    calories_of_food = item['nf_calories']
+                    fats = item['nf_total_fat']
+                    carb = item['nf_total_carbohydrate']
+                    protein = item['nf_protein']
+
+                    data = {
+                        'Serving_size': serving,
+                        'Grams': grams,
+                        'Calories': calories_of_food,
+                        'Protein': protein,
+                        'Carbohydrates': carb,
+                        'Fats': fats
+                    }
+                food.details = data2
+                food.save()
+            
+            else:
+                error = f'Request failed with status code {response.status_code} {response.content}'
+            return render(request, 'food_api.html', {'error': error, 'form': form, 'food': food})
+    else:
+        form = FoodForm()
+
+    return render(request, 'food_api.html', {'error': error, 'form': form, 'food': food})
 
 def food_result(request):
     return render(request,'food_api.html')

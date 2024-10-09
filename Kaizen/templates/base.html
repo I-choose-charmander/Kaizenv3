@@ -71,6 +71,9 @@
     {% if user.is_authenticated %}
     <nav class='navbar'>
         <ul class='nav-links'>
+            <li></li>
+                <a href="{% url 'food_api' %}">API</a>
+            </li>
             <li>
                 <a href="{% url 'macro' %}">Calculate MacroNutrients</a>
             </li>

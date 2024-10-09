@@ -34,6 +34,7 @@ urlpatterns = [
     path('macro_results/',views.macro_results,name='macro_results'),
     path('update_profile', views.update_profile,name='update_profile'),
     path('food', views.food_intake, name='food'),
+    path('food_api', views.get_api_data, name='food_api'),
     path('delete_meal/<id>',views.delete_meal, name='delete_meal'),
     path('update_meal/<id>', views.update_meal, name='update_meal'),
     path('food_result', views.food_result, name='food_result'),

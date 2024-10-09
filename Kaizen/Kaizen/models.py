@@ -60,3 +60,7 @@ class DailyTotal(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.date}"
+    
+class Food(models.Model):
+    food = models.CharField(max_length=200)
+    details = models.TextField()
