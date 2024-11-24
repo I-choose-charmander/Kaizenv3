@@ -25,7 +25,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', views.home, name='home'),
     path('logout/',views.custom_logout, name='logout'),
+    #path('meal/',views.macromeals, name='meal'),
     path('pdf/', views.pdf, name='pdf'),
+    #path('upload-csv/', views.upload_csv, name='upload_csv'),
     path('admin/', admin.site.urls),
     path('login/', views.login_page, name='login'),
     path('register/', views.register_page, name='register'),
@@ -43,7 +45,7 @@ urlpatterns = [
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'), name='password_reset_complete'),
-
+    path('meal_choice', views.meal_choice, name='meal_choice')
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -7,4 +7,5 @@ admin.site.register(Profile)
 admin.site.register(RunningMacro)
 admin.site.register(DailyTotal)
 admin.site.register(Food)
+admin.site.register(Meal)
 

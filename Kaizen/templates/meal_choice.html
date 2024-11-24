@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% load static %}
+
+{% block content %}
+    <div class="container mt-5 col-6"> 
+        <form class="col-6 mx-auto card p-3 shadow-lg" method="post" enctype="multipart/form-data"> 
+            {% csrf_token %} 
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">Find Meal</button> 
+        </form>
+    </div>
+    <div>
+        {{data}}
+        
+    </div>
+{% endblock %}

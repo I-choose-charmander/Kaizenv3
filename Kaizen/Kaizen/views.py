@@ -1,14 +1,17 @@
-from django.http import HttpResponseRedirect
+import csv
+from django.http import HttpResponse
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
 from dotenv import load_dotenv
-from .models import Expense,StockData,Profile,BMR,RunningMacro,DailyTotal,Food
-from .forms import BMRForm,BudgetForm,ExpenseForm,StockForm,ProfileForm,FoodForm,MacroIntakeForm
+from .models import Expense,StockData,Profile,BMR,RunningMacro,DailyTotal,Food,Meal
+from .forms import BMRForm,BudgetForm,ExpenseForm,StockForm,ProfileForm,FoodForm,MacroIntakeForm,RecipeForm, CSVUploadForm
 from .macrocalc import calculate_bmr,calculate_tdee, calculate_macros
 from .budgetcalc import monthly_budget
+from .recipies import mealChoice,filtered_meals
 
 
 import requests
@@ -383,3 +386,53 @@ def get_api_data(request):
 
 def food_result(request):
     return render(request,'food_api.html')
+
+def meal_choice(request):
+    if request.method == 'POST':
+        form = RecipeForm(request.POST)
+        if form.is_valid():
+            selected_diet = form.cleaned_data['diet']
+            meal = mealChoice(selected_diet)
+        return render(request,"meal_choice.html",{'data': meal, 'form':form})
+    else:
+        form = RecipeForm()
+    return render(request,'meal_choice.html',{'data': 0,'form':form})
+
+def upload_csv(request):
+    if request.method == 'POST':
+        form = CSVUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            csv_file = form.cleaned_data['csv_file']
+            decoded_file = csv_file.read().decode('utf-8')
+            csv_reader = csv.DictReader(decoded_file.splitlines())
+            for row in csv_reader:
+                meals = Meal(meal_name=row['meal_name'], calories=row['calories'], protien=row['protien'],carbohydrate=row['carbohydrate'],fat=row['fats'],recipe=row['recipe'],ingredients=row['ingredients'])
+                meals.save()
+            return HttpResponse('Upload successful!')
+    else:
+        form = CSVUploadForm()
+    return render(request, 'upload_csv.html', {'form': form})
+
+def macromeals(request):
+    if request.method == 'POST':
+
+        daily,create  = DailyTotal.objects.get_or_create(user=request.user,date=date.today())
+        if created:
+            daily.total_protein_intake = 0
+            daily.total_carb_intake = 0
+            daily.total_fat_intake = 0
+            daily.total_tdee_intake = 0
+            daily.save()
+
+        existing_bmr = BMR.objects.filter(user=request.user).first()
+        
+        remaining_tdee = existing_bmr.tdee - daily.total_tdee_intake
+        remaining_protein = existing_bmr.protein - daily.total_protein_intake
+        remaining_carb = existing_bmr.carb - daily.total_carb_intake
+        remaining_fat = existing_bmr.fat - daily.total_fat_intake
+
+        meals = Meal.object.get().all
+        selection = filtered_meals(meals, remaining_tdee, remaining_protein, remaining_carb, remaining_fat) 
+        return render(request, 'test.html', {'selection': selection})
+    else:
+        return render(request, 'test.html')

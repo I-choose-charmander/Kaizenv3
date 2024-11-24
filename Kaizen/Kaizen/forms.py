@@ -97,4 +97,9 @@ class FoodForm(forms.ModelForm):
 class CreateUserForm(forms.Form):
     pass
 
+class RecipeForm (forms.Form):
+    FOODS_DIETS = [("paleo","Paleo"),("vegan","Vegan"),("keto","Keto"),("mediterranean","Mediterranean")]
+    diet = forms.ChoiceField(choices=FOODS_DIETS, required=False)
 
+class CSVUploadForm(forms.Form):
+    csv_file = forms.FileField()

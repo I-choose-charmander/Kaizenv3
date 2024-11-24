@@ -64,3 +64,12 @@ class DailyTotal(models.Model):
 class Food(models.Model):
     food = models.CharField(max_length=200)
     details = models.TextField()
+
+class Meal(models.Model):
+    meal_name = models.CharField(max_length=200)
+    calories = models.IntegerField() 
+    protien = models.IntegerField()
+    carbohydrate = models.IntegerField()
+    fat = models.IntegerField()
+    recipe = models.TextField()
+    ingredients = models.TextField()
