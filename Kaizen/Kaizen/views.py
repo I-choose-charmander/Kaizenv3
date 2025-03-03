@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from dotenv import load_dotenv
 from .models import Expense,StockData,Profile,BMR,RunningMacro,DailyTotal,Food,Meal
-from .forms import BMRForm,BudgetForm,ExpenseForm,StockForm,ProfileForm,FoodForm,MacroIntakeForm,RecipeForm, CSVUploadForm
+from .forms import BMRForm,BMRBForm,BudgetForm,ExpenseForm,StockForm,ProfileForm,FoodForm,MacroIntakeForm,RecipeForm, CSVUploadForm
 from .macrocalc import calculate_bmr,calculate_tdee, calculate_macros
 from .budgetcalc import monthly_budget
 from .recipies import mealChoice,filtered_meals
@@ -27,43 +27,31 @@ load_dotenv()
 def home(request):
     return render(request, 'home.html')
 
-@login_required(login_url='/login/')
+def verify_recaptcha(response):
+    secret_key = "6LdksucqAAAAAOsMmL9xi930PY9fG-w9FY_YMPho"
+    data = {
+        'secret': secret_key,
+        'response': response
+    }
+    r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+    result = r.json()
+    return result.get('success', False)
+
 def get_macro_values(request):
     if request.method == "POST":
-        form = BMRForm(request.POST)
-        if form.is_valid():
+        recaptcha_response = request.POST.get('g-recaptcha-response')
+        form = BMRForm(request.POST, prefix="form1")
+        form2 = BMRBForm(request.POST, prefix="form2")
+        
+        if form.is_valid() & verify_recaptcha(recaptcha_response):
             bmr_instance = form.save(commit=False)
+        elif form2.is_valid() & verify_recaptcha(recaptcha_response):
+            bmr_instance = form2.save(commit=False)
+        else:
+            return render(request, 'macro.html', {'form': form, 'form2': form2})
+
+        if request.user.is_authenticated:
             bmr_instance.user = request.user
-
-            weight = bmr_instance.weight
-            feet = bmr_instance.feet
-            age = bmr_instance.age
-            inches = bmr_instance.inches
-            sex = bmr_instance.sex
-            activity_level = bmr_instance.activity_level
-            goal = bmr_instance.goal
-
-            bmr = calculate_bmr(weight, feet, inches, age, sex)
-            calories = calculate_tdee(bmr, activity_level, goal)
-            macros = calculate_macros(calories, weight)
-
-            tdee = round(calories)
-            protein = round(macros['Protein'])
-            carb = round(macros['Carb'])
-            fat = round(macros['Fat'])
-
-            bmr_instance.tdee = tdee
-            bmr_instance.protein = protein
-            bmr_instance.carb = carb
-            bmr_instance.fat = fat
-
-            user_bmr_data = {
-                'tdee': tdee,
-                'protein': protein,
-                'carb': carb,
-                'fat': fat
-            }
-
             # Check if there is an existing BMR instance for the user
             existing_bmr = BMR.objects.filter(user=request.user).order_by('-id').first()
             if existing_bmr and bmr_instance.save_to_profile:
@@ -82,12 +70,68 @@ def get_macro_values(request):
                 existing_bmr.save()
             else:
                 bmr_instance.save()
+        else:
+            # Convert bmr_instance to a dictionary and store it in the session
+            request.session['bmr_data'] = {
+                'weight': bmr_instance.weight,
+                'feet': bmr_instance.feet,
+                'age': bmr_instance.age,
+                'inches': bmr_instance.inches,
+                'sex': bmr_instance.sex,
+                'activity_level': bmr_instance.activity_level,
+                'goal': bmr_instance.goal,
+                'tdee': bmr_instance.tdee,
+                'protein': bmr_instance.protein,
+                'carb': bmr_instance.carb,
+                'fat': bmr_instance.fat,
+            }
 
-            return render(request, 'macro_results.html', {'user_bmr_data': user_bmr_data})
+        # Retrieve bmr_instance details from session data if anonymous
+        if not request.user.is_authenticated:
+            bmr_instance_data = request.session.get('bmr_data')
+            weight = bmr_instance_data.get('weight')
+            feet = bmr_instance_data.get('feet')
+            age = bmr_instance_data.get('age')
+            inches = bmr_instance_data.get('inches')
+            sex = bmr_instance_data.get('sex')
+            activity_level = bmr_instance_data.get('activity_level')
+            goal = bmr_instance_data.get('goal')
+        else:
+            weight = bmr_instance.weight
+            feet = bmr_instance.feet
+            age = bmr_instance.age
+            inches = bmr_instance.inches
+            sex = bmr_instance.sex
+            activity_level = bmr_instance.activity_level
+            goal = bmr_instance.goal
+
+        bmr = calculate_bmr(weight, feet, inches, age, sex)
+        calories = calculate_tdee(bmr, activity_level, goal)
+        macros = calculate_macros(calories, weight)
+
+        tdee = round(calories)
+        protein = round(macros['Protein'])
+        carb = round(macros['Carb'])
+        fat = round(macros['Fat'])
+
+        bmr_instance.tdee = tdee
+        bmr_instance.protein = protein
+        bmr_instance.carb = carb
+        bmr_instance.fat = fat
+
+        user_bmr_data = {
+            'tdee': tdee,
+            'protein': protein,
+            'carb': carb,
+            'fat': fat
+        }
+
+        return render(request, 'macro_results.html', {'user_bmr_data': user_bmr_data})
     else:
-        form = BMRForm()
-    
-    return render(request, 'macro.html', {'form': form})
+        form = BMRForm(prefix="form1")
+        form2 = BMRBForm(prefix="form2")
+
+    return render(request, 'macro.html', {'form': form, 'form2': form2})
 
 @login_required(login_url='/login/')
 def food_intake(request):

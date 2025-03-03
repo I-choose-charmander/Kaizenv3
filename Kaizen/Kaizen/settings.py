@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Kaizen',
     'bootstrap5',
+    'django_recaptcha',
 ]
 
 MIDDLEWARE = [
@@ -156,3 +157,9 @@ if all([ADMIN_USER_NAME, ADMIN_USER_EMAIL]):
         (f'{ADMIN_USER_NAME}', f'{ADMIN_USER_EMAIL}')
     ]
     MANAGERS=ADMINS
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# settings.py
+RECAPTCHA_PUBLIC_KEY =   "6LdksucqAAAAAAdM3zBU6GkSrMY0_F8pPcYkhiev"
+RECAPTCHA_PRIVATE_KEY = "6LdksucqAAAAAOsMmL9xi930PY9fG-w9FY_YMPho"

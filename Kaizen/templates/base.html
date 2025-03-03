@@ -66,6 +66,7 @@
             align-content: center;
         }
     </style>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     {% if user.is_authenticated %}
@@ -100,6 +101,9 @@
     {% else %}
     <nav class='navbar'>
         <ul class='nav-links'>
+            <li>
+                <a href="{% url 'macro' %}">Calculate MacroNutrients</a>
+            </li>
             <li>
                 <a href="{% url 'login' %}">Log in</a>
             </li>
