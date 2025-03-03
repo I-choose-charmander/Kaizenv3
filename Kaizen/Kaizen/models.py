@@ -28,6 +28,23 @@ class BMR(models.Model):
     carb = models.FloatField(null=True, blank=True)
     save_to_profile = models.BooleanField(default=False)
 
+class BMR2(models.Model):
+    SEX_CHOICES = [('Male','Male'),('Female','Female')]
+    ACTIVITY_CHOICES = [(1.2,'Sedentary'), (1.375, 'Light Activity'),(1.55, 'Moderate Activity'), (1.725,'Very Active'),(1.90,'Super Activity')]
+    GOAL_CHOICES = [("Muscle Gain", 'Muscle Gain'), ("Maintenace", "Maintenance"), ("Fat Loss", "Fat Loss")]
+
+    age = models.IntegerField()
+    feet = models.IntegerField()
+    inches = models.IntegerField()
+    weight = models.IntegerField()
+    sex = models.CharField(max_length=6,choices=SEX_CHOICES)
+    activity_level = models.FloatField(choices=ACTIVITY_CHOICES)
+    goal = models.CharField(max_length=11,choices=GOAL_CHOICES)
+    tdee = models.FloatField(null=True, blank=True)
+    protein = models.FloatField(null=True, blank=True)
+    fat = models.FloatField(null=True, blank=True)
+    carb = models.FloatField(null=True, blank=True)
+    
 class StockData(models.Model):
     data = models.TextField(null=True)
     ticker = models.TextField(null=True)

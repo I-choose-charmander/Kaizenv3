@@ -1,7 +1,11 @@
 from django import forms
-from .models import Expense, BMR, StockData, Profile, RunningMacro, Food
+from django_recaptcha.fields import ReCaptchaField
+from django_recaptcha.widgets import ReCaptchaV2Checkbox
+from .models import Expense, BMR,BMR2, StockData, Profile, RunningMacro, Food
 
 class BMRForm(forms.ModelForm):
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
+
     #save_to_profile = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
     class Meta:
         model = BMR
@@ -13,7 +17,8 @@ class BMRForm(forms.ModelForm):
             'sex',
             'activity_level',
             'goal',
-            'save_to_profile'
+            'save_to_profile',
+            'captcha',
         ]
 
         widgets = {
@@ -26,6 +31,31 @@ class BMRForm(forms.ModelForm):
             'goal': forms.Select(attrs={'class': 'form-control'})
         }
 
+class BMRBForm(forms.ModelForm):
+    captcha = ReCaptchaField()
+    #save_to_profile = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
+    class Meta:
+        model = BMR2
+        fields =[
+            'age',
+            'feet',
+            'inches',
+            'weight',
+            'sex',
+            'activity_level',
+            'goal',
+            'captcha',
+        ]
+
+        widgets = {
+            'age': forms.NumberInput(attrs={'class': 'form-control'}),
+            'feet': forms.NumberInput(attrs={'class': 'form-control'}),
+            'inches': forms.NumberInput(attrs={'class': 'form-control'}),
+            'weight': forms.NumberInput(attrs={'class': 'form-control'}),
+            'sex': forms.Select(attrs={'class': 'form-control'}),
+            'activity_level': forms.Select(attrs={'class': 'form-control'}),
+            'goal': forms.Select(attrs={'class': 'form-control'})
+        }
 class MacroIntakeForm(forms.ModelForm):
     
     class Meta:
